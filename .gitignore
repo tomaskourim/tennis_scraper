@@ -1,5 +1,4 @@
 .idea/
 tennis_scraper.iml
 data/*
-!data/last_run.txt
-download_data.sh
+download_data.bat
