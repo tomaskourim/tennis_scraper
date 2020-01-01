@@ -1,4 +1,4 @@
 .idea/
 tennis_scraper.iml
-!data/last_run.txt
 data/*
+!data/last_run.txt
