@@ -32,7 +32,7 @@ def scrape_wta():
     f.write(str(today))
     f.close()
 
-    year = 2019
+    year = 2019 # get it automatically, but it does not work on January 1st
     while True:
         data_year = pd.DataFrame()
         page = 0
