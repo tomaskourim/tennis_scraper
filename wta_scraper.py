@@ -1,4 +1,6 @@
+import argparse
 import datetime
+import logging
 import os
 from pathlib import Path
 from shutil import copy2
@@ -21,18 +23,19 @@ def different_dataframe(data_year: pd.DataFrame, filepath: str) -> bool:
     return (last_data != data_year).any().any()
 
 
-def scrape_wta():
-    f = open("data/last_run.txt", "r")
+def scrape_wta(current_dir: str):
+    last_run_path = os.path.join(current_dir, "data\\last_run.txt")
+    f = open(last_run_path, "r")
     last_run_date = f.read()
     f.close()
-    last_run_date_path = Path(f"data/{last_run_date}")
+    last_run_date_path = Path(os.path.join(current_dir, f"data\\{last_run_date}"))
 
     today = datetime.datetime.now().date()
-    f = open("data/last_run.txt", "w")
+    f = open(last_run_path, "w")
     f.write(str(today))
     f.close()
 
-    year = 2019 # get it automatically, but it does not work on January 1st
+    year = 2019  # get it automatically, but it does not work on January 1st
     while True:
         data_year = pd.DataFrame()
         page = 0
@@ -52,7 +55,7 @@ def scrape_wta():
             data_year = data_year.set_index([pd.Index(range(1, len(data_year) + 1))])
             data_year.tourn_year = data_year.tourn_year.astype(int)
             data_year.PlayerNbr = data_year.PlayerNbr.astype(int)
-            filepath = f"data/wta_{year}.xlsx"
+            filepath = os.path.join(current_dir, f"data\\wta_{year}.xlsx")
             if not os.path.exists(filepath):
                 data_year.to_excel(filepath)
             elif different_dataframe(data_year, filepath):
@@ -66,4 +69,17 @@ def scrape_wta():
 
 
 if __name__ == "__main__":
-    scrape_wta()
+    start_time = datetime.datetime.now()
+
+    parser = argparse.ArgumentParser(description="Script to download stats from WTA official webpage.")
+    parser.add_argument("--working_directory", help="The working directory of the scraper", required=False)
+    args = parser.parse_args()
+
+    working_directory = args.working_directory
+    if working_directory is None:
+        working_directory = os.getcwd()
+
+    scrape_wta(working_directory)
+
+    end_time = datetime.datetime.now()
+    logging.info(f"\nDuration: {(end_time - start_time)}")
