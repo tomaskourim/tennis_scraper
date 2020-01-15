@@ -10,6 +10,7 @@ import pandas as pd
 import requests
 
 ERROR_STRING = -12513911  # random value to get rid of NaNs
+STARTING_YEAR = 2020
 
 
 def different_dataframe(data_year: pd.DataFrame, filepath: str) -> bool:
@@ -35,7 +36,7 @@ def scrape_wta(current_dir: str):
     f.write(str(today))
     f.close()
 
-    year = 2019  # get it automatically, but it does not work on January 1st
+    year = STARTING_YEAR  # get it automatically, but it does not work on January 1st
     while True:
         data_year = pd.DataFrame()
         page = 0
