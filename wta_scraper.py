@@ -14,14 +14,20 @@ STARTING_YEAR = 2020
 
 
 def different_dataframe(data_year: pd.DataFrame, filepath: str) -> bool:
+    """
+    Returns True if the new data differs from the one already stored, False if they are identical.
+    :param data_year:
+    :param filepath:
+    :return:
+    """
     data_year = data_year.replace(np.nan, ERROR_STRING)
     last_data = pd.read_excel(filepath, keep_default_na=False)
     last_data = last_data.drop(['Unnamed: 0'], axis=1)
     last_data = last_data.replace(r'^\s*$', ERROR_STRING, regex=True)
     dtypes = data_year.dtypes
     last_data = last_data.astype(dtypes)
-    last_data = last_data.set_index([pd.Index(range(1, len(data_year) + 1))])
-    return (last_data != data_year).any().any()
+    last_data = last_data.set_index([pd.Index(range(1, len(last_data) + 1))])
+    return (last_data != data_year).any().any() if len(last_data) == len(data_year) else True
 
 
 def scrape_wta(current_dir: str):
