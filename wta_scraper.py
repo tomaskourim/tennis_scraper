@@ -53,12 +53,8 @@ def scrape_wta(working_dir: str):
             # extracting data in json format
             data = r.json()
             if len(data) == 0:
-                if year == original_year:
-                    print(year, page)
-                    year = year - 1
-                else:
-                    print(year, page)
-                    break
+                print(year, page)
+                break
             data_year = data_year.append(pd.DataFrame(data))
             page = page + 1
 
